@@ -1,14 +1,9 @@
-output "bucket_id" {
-  description = "The name/ID of the S3 bucket."
-  value       = aws_s3_bucket.testbucket_cloud01.id
+output "gowritest_001_bucket_id" {
+  description = "ID of the gowritest-001 S3 bucket (will be empty after destroy)"
+  value       = aws_s3_bucket.gowritest_001.id
 }
 
-output "bucket_arn" {
-  description = "The ARN of the S3 bucket."
-  value       = aws_s3_bucket.testbucket_cloud01.arn
-}
-
-output "bucket_region" {
-  description = "The region in which the bucket was created."
-  value       = aws_s3_bucket.testbucket_cloud01.region
+output "gowritest_001_bucket_arn" {
+  description = "ARN of the gowritest-001 S3 bucket (will be empty after destroy)"
+  value       = aws_s3_bucket.gowritest_001.arn
 }

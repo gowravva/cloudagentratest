@@ -1,3 +1,59 @@
+resource "aws_s3_bucket" "test_5e234" {
+  bucket        = "test-5e234"
+  force_destroy = false
+
+  tags = {
+    Name  = "test-5e234"
+    Stack = "s3-bucket"
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "test_5e234_ownership_controls" {
+  bucket = aws_s3_bucket.test_5e234.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+
+  depends_on = [aws_s3_bucket.test_5e234]
+}
+
+resource "aws_s3_bucket_public_access_block" "test_5e234_public_access_block" {
+  bucket = aws_s3_bucket.test_5e234.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  depends_on = [
+    aws_s3_bucket.test_5e234,
+    aws_s3_bucket_ownership_controls.test_5e234_ownership_controls,
+  ]
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "test_5e234_sse" {
+  bucket = aws_s3_bucket.test_5e234.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+
+  depends_on = [aws_s3_bucket.test_5e234]
+}
+
+resource "aws_s3_bucket_versioning" "test_5e234_versioning" {
+  bucket = aws_s3_bucket.test_5e234.id
+
+  versioning_configuration {
+    status = "Disabled"
+  }
+
+  depends_on = [aws_s3_bucket.test_5e234]
+}
+
 resource "aws_s3_bucket" "mycloud_testbk789" {
   bucket        = "mycloud-testbk789"
   force_destroy = false

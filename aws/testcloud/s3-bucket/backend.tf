@@ -1,10 +1,10 @@
 terraform {
-  backend "s3" {
-    bucket       = "cloudagentra-state-444062204915-testcloud-gouri"
-    key          = "cloudagentra/s3-bucket/terraform.tfstate"
-    region       = "ap-south-1"
-    use_lockfile = true
-    encrypt      = true
+  backend "http" {
+    address        = "http://localhost:8000/api/state/aws/a-83/s3-bucket"
+    lock_address   = "http://localhost:8000/api/state/aws/a-83/s3-bucket/lock"
+    unlock_address = "http://localhost:8000/api/state/aws/a-83/s3-bucket/unlock"
+    lock_method    = "LOCK"
+    unlock_method  = "UNLOCK"
   }
 
   encryption {

@@ -1,15 +1,33 @@
-resource "aws_s3_bucket" "test_bucket01" {
-  bucket        = "test-bucket01"
+resource "aws_s3_bucket" "testcloud_bucket" {
+  bucket        = "testcloud-bucket"
   force_destroy = false
 
   tags = {
-    Name  = "test-bucket01"
-    Stack = "network"
+    Name       = "testcloud-bucket"
+    ManagedBy  = "opentofu"
+    Stack      = "network"
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "test_bucket01_sse" {
-  bucket = aws_s3_bucket.test_bucket01.id
+resource "aws_s3_bucket_public_access_block" "testcloud_bucket_public_access_block" {
+  bucket = aws_s3_bucket.testcloud_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_ownership_controls" "testcloud_bucket_ownership" {
+  bucket = aws_s3_bucket.testcloud_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "testcloud_bucket_sse" {
+  bucket = aws_s3_bucket.testcloud_bucket.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -18,31 +36,29 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "test_bucket01_sse
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "test_bucket01_public_access_block" {
-  bucket = aws_s3_bucket.test_bucket01.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_ownership_controls" "test_bucket01_ownership" {
-  bucket = aws_s3_bucket.test_bucket01.id
-
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-
-  depends_on = [aws_s3_bucket_public_access_block.test_bucket01_public_access_block]
-}
-
-resource "aws_s3_bucket_versioning" "test_bucket01_versioning" {
-  bucket = aws_s3_bucket.test_bucket01.id
+resource "aws_s3_bucket_versioning" "testcloud_bucket_versioning" {
+  bucket = aws_s3_bucket.testcloud_bucket.id
 
   versioning_configuration {
     status = "Enabled"
   }
+
+  depends_on = [aws_s3_bucket_ownership_controls.testcloud_bucket_ownership]
+}
+
+output "testcloud_bucket_id" {
+  description = "The name (ID) of the testcloud-bucket S3 bucket."
+  value       = aws_s3_bucket.testcloud_bucket.id
+}
+
+output "testcloud_bucket_arn" {
+  description = "The ARN of the testcloud-bucket S3 bucket."
+  value       = aws_s3_bucket.testcloud_bucket.arn
+}
+
+output "testcloud_bucket_region" {
+  description = "The AWS region where testcloud-bucket was created."
+  value       = aws_s3_bucket.testcloud_bucket.region
 }
 
 resource "aws_s3_bucket_versioning" "bk123_test_versioning" {

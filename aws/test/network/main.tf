@@ -1,19 +1,49 @@
-# -----------------------------------------------------------------------
-# TARGETED DESTROY - bk123-test bucket and its 4 configuration resources
-# The sibling bucket bk12-test and all its resources are NOT represented
-# here and will remain completely untouched.
-#
-# The host runner will execute:
-#   tofu destroy \
-#     -target=aws_s3_bucket_versioning.bk123_test_versioning \
-#     -target=aws_s3_bucket_server_side_encryption_configuration.bk123_test_sse \
-#     -target=aws_s3_bucket_public_access_block.bk123_test_public_access_block \
-#     -target=aws_s3_bucket_ownership_controls.bk123_test_ownership \
-#     -target=aws_s3_bucket.bk123_test
-#
-# WARNING: force_destroy = false - if the bucket contains any objects
-# AWS will reject the delete. Empty the bucket manually first.
-# -----------------------------------------------------------------------
+resource "aws_s3_bucket" "test_bucket01" {
+  bucket        = "test-bucket01"
+  force_destroy = false
+
+  tags = {
+    Name  = "test-bucket01"
+    Stack = "network"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "test_bucket01_sse" {
+  bucket = aws_s3_bucket.test_bucket01.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "test_bucket01_public_access_block" {
+  bucket = aws_s3_bucket.test_bucket01.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_ownership_controls" "test_bucket01_ownership" {
+  bucket = aws_s3_bucket.test_bucket01.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+
+  depends_on = [aws_s3_bucket_public_access_block.test_bucket01_public_access_block]
+}
+
+resource "aws_s3_bucket_versioning" "test_bucket01_versioning" {
+  bucket = aws_s3_bucket.test_bucket01.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
 
 resource "aws_s3_bucket_versioning" "bk123_test_versioning" {
   bucket = "bk123-test"

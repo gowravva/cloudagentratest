@@ -66,6 +66,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "agentic_b001_sse"
   }
 }
 
+resource "aws_s3_bucket" "gowritest_001" {
+  bucket        = "gowritest-001"
+  force_destroy = false
+
+  tags = {
+    stack = "s3-bucket"
+    name  = "gowritest-001"
+  }
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "gowritest_001_sse" {
   bucket = aws_s3_bucket.gowritest_001.id
 
@@ -87,17 +97,32 @@ resource "aws_s3_bucket_public_access_block" "gowritest_001_public_access_block"
   depends_on = [aws_s3_bucket_server_side_encryption_configuration.gowritest_001_sse]
 }
 
-resource "aws_s3_bucket" "gowritest_001" {
-  bucket        = "gowritest-001"
-  force_destroy = false
+resource "aws_s3_bucket" "gowri_agentra_test" {
+  bucket        = "gowri-agentra-test-444062204915"
+  force_destroy = true
 
   tags = {
-    stack = "s3-bucket"
-    name  = "gowritest-001"
+    Name  = "gowri-agentra-test-444062204915"
+    Stack = "s3-bucket"
   }
+}
 
-  depends_on = [
-    aws_s3_bucket_server_side_encryption_configuration.gowritest_001_sse,
-    aws_s3_bucket_public_access_block.gowritest_001_public_access_block,
-  ]
+resource "aws_s3_bucket_public_access_block" "gowri_agentra_test_public_access_block" {
+  bucket = aws_s3_bucket.gowri_agentra_test.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "gowri_agentra_test_sse" {
+  bucket = aws_s3_bucket.gowri_agentra_test.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+    bucket_key_enabled = true
+  }
 }

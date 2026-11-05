@@ -1,3 +1,33 @@
+resource "aws_s3_bucket" "gowri_staging_bucket_20261105" {
+  bucket        = "gowri-staging-bucket-20261105"
+  force_destroy = false
+
+  tags = {
+    Name       = "gowri-staging-bucket-20261105"
+    Stack      = "s3-bucket"
+    ManagedBy  = "opentofu"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "gowri_staging_bucket_20261105_public_access_block" {
+  bucket = aws_s3_bucket.gowri_staging_bucket_20261105.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "gowri_staging_bucket_20261105_sse" {
+  bucket = aws_s3_bucket.gowri_staging_bucket_20261105.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
 resource "aws_s3_bucket" "gowri_test01" {
   bucket        = "gowri-test01-435465756"
   force_destroy = true

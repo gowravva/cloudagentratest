@@ -1,34 +1,34 @@
-resource "aws_s3_bucket" "gowri_agentra_test_444062204915" {
-  bucket        = "gowri-agentra-test-444062204915"
-  force_destroy = false
+resource "aws_s3_bucket" "gowri_test01" {
+  bucket        = "gowri-test01-435465756"
+  force_destroy = true
 
   tags = {
-    Name  = "gowri-agentra-test-444062204915"
+    Name  = "gowri-test01-435465756"
     Stack = "s3-bucket"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "gowri_agentra_test_444062204915_public_access_block" {
-  bucket = aws_s3_bucket.gowri_agentra_test_444062204915.id
+resource "aws_s3_bucket_ownership_controls" "gowri_test01_ownership" {
+  bucket = aws_s3_bucket.gowri_test01.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "gowri_test01_public_access_block" {
+  bucket = aws_s3_bucket.gowri_test01.id
 
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+
+  depends_on = [aws_s3_bucket_ownership_controls.gowri_test01_ownership]
 }
 
-resource "aws_s3_bucket_ownership_controls" "gowri_agentra_test_444062204915_ownership_controls" {
-  bucket = aws_s3_bucket.gowri_agentra_test_444062204915.id
-
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-
-  depends_on = [aws_s3_bucket_public_access_block.gowri_agentra_test_444062204915_public_access_block]
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "gowri_agentra_test_444062204915_sse" {
-  bucket = aws_s3_bucket.gowri_agentra_test_444062204915.id
+resource "aws_s3_bucket_server_side_encryption_configuration" "gowri_test01_sse" {
+  bucket = aws_s3_bucket.gowri_test01.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -36,6 +36,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "gowri_agentra_tes
     }
     bucket_key_enabled = true
   }
+
+  depends_on = [aws_s3_bucket.gowri_test01]
 }
 
 resource "aws_s3_bucket" "agentic_b001" {

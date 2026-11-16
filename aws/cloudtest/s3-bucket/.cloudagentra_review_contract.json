@@ -1,0 +1,1 @@
+{"operation": "create", "target_addresses": ["aws_s3_bucket.testgowri_s31", "aws_s3_bucket_versioning.testgowri_s31_versioning", "aws_s3_bucket_public_access_block.testgowri_s31_public_access_block", "aws_s3_bucket_server_side_encryption_configuration.testgowri_s31_sse"]}

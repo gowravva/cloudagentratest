@@ -1,0 +1,1 @@
+{"operation": "create", "target_addresses": ["aws_s3_bucket.prodtest_aws01", "aws_s3_bucket_public_access_block.prodtest_aws01_public_access_block", "aws_s3_bucket_server_side_encryption_configuration.prodtest_aws01_sse"]}

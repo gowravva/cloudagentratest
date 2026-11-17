@@ -1,0 +1,1 @@
+{"operation": "create", "target_addresses": ["aws_s3_bucket.gowri_fullstack_assets", "aws_s3_bucket_ownership_controls.gowri_fullstack_assets_ownership", "aws_s3_bucket_public_access_block.gowri_fullstack_assets_pab", "aws_s3_bucket_server_side_encryption_configuration.gowri_fullstack_assets_sse", "aws_s3_bucket_versioning.gowri_fullstack_assets_versioning"]}

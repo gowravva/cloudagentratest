@@ -1,0 +1,1 @@
+{"operation": "delete", "target_addresses": ["aws_route_table_association.test_public_rt_assoc", "aws_route_table.test_public_rt", "aws_internet_gateway.test_public_igw", "aws_subnet.test_public_subnet_1a", "aws_vpc.test_public_vpc"]}
